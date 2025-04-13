@@ -1,0 +1,79 @@
+import time
+import math
+import matplotlib.pyplot as plt
+
+n= int(input("Enter a number you want to find the cube root:"))
+def cube_root(n):
+    """
+    Calculate the cube root of an integer n using binary search.
+    Returns a tuple (cube_root, steps) where cube_root is a float and steps is an integer.
+    Handles positive, negative integers, and zero.
+    """
+    # Handle the special case of n = 0
+    if n == 0:
+        return 0.0, 0  # Cube root is 0, takes 0 steps
+    
+    # Determine the sign of the result and work with absolute value
+    sign = 1 if n > 0 else -1
+    n = abs(n)
+    
+    # Initialize binary search bounds and step counter
+    steps = 0
+    low = 0.0
+    high = float(n)  # Convert to float to avoid integer overflow in calculations
+    
+    # Binary search until the interval is smaller than precision 1e-9
+    while high - low > 1e-9: #epsilon (1e-9) as the precision
+        mid = (low + high) / 2 #it is constantly didviding the range of the guess by 2 in each step
+        cube = mid * mid * mid  # Compute mid^3
+        if cube < n:
+            low = mid  # If mid^3 is less than n, search in upper half
+        else:
+            high = mid  # Otherwise, search in lower half
+        steps += 1
+    
+    # Final approximation is the midpoint of the last interval
+    result = sign * (low + high) / 2
+    return result, steps
+result, steps = cube_root(n)
+print(f"Your Number = {n:3d}, cube root ≈ {result:.3f}, No. of steps = {steps}")
+"""
+# Test the cube_root function with sample inputs
+print("Testing cube_root function:")
+test_values = [-27, -8, -1, 0, 1, 8, 27]
+for n in test_values:
+    
+"""
+
+# Prepare data for graphing
+digits = list(range(1, 19))  # Number of digits from 1 to 18
+steps_list = []
+time_list = []
+
+for k in digits:
+    n = 10 ** (k - 1)  # Integer with k digits, e.g., 1, 10, 100, ..., 10^17
+    start_time = time.perf_counter()  # High-precision timer start
+    result, steps = cube_root(n)
+    end_time = time.perf_counter()  # Timer end
+    time_taken = end_time - start_time
+    steps_list.append(steps)
+    time_list.append(time_taken)
+
+# Plot 1: Number of steps vs. number of digits
+plt.figure(figsize=(8, 6))
+plt.plot(digits, steps_list, marker='o')
+plt.xlabel('Number of Digits')
+plt.ylabel('Number of Steps')
+plt.title('Number of Steps vs. Number of Digits')
+plt.grid(True)
+
+# Plot 2: Time taken vs. number of digits
+plt.figure(figsize=(8, 6))
+plt.plot(digits, time_list, marker='o')
+plt.xlabel('Number of Digits')
+plt.ylabel('Time Taken (seconds)')
+plt.title('Time Taken vs. Number of Digits')
+plt.grid(True)
+
+# Display both plots
+plt.show()
