@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+P0 = 1000  # Initial population
+r = 0.02   # Growth rate (2% per year)
+years = 50 # Time period
+
+# Function to calculate population using exponential growth
+def population_growth(P0, r, t):
+    return P0 * np.exp(r * t)
+
+# 1. For loop implementation
+time_for = np.arange(0, years + 1)
+pop_for = []
+for t in time_for:
+    pop = population_growth(P0, r, t)
+    pop_for.append(pop)
+
+# 2. While loop implementation
+time_while = []
+pop_while = []
+t = 0
+while t <= years:
+    pop = population_growth(P0, r, t)
+    time_while.append(t)
+    pop_while.append(pop)
+    t += 1
+
+# Visualization
+plt.figure(figsize=(10, 6))
+plt.plot(time_for, pop_for, 'b-', label='For Loop', linewidth=2)
+plt.plot(time_while, pop_while, 'r--', label='While Loop', linewidth=2)
+plt.xlabel('Years')
+plt.ylabel('Population')
+plt.title('Population Growth Model: For vs While Loop')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+
+# Display the plot
+plt.show()
+
+# Print sample results
+print(f"Initial population: {P0}")
+print(f"Population after {years} years (For loop): {pop_for[-1]:.2f}")
+print(f"Population after {years} years (While loop): {pop_while[-1]:.2f}")
